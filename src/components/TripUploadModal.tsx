@@ -146,7 +146,7 @@ export function UploadTripModal({
                 <p className="text-[#5bcec4] font-medium">{file.name}</p>
               ) : (
                 <p className="text-[#5bcec4] font-medium">
-                  Click here to upload the Excel sheet of your trip
+                  Click here to upload the CSV File of your trip
                 </p>
               )}
             </div>
