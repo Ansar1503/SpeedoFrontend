@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 interface UploadTripModalProps {
   isOpen: boolean;
@@ -38,6 +39,8 @@ export function UploadTripModal({
         droppedFile.name.toLowerCase().endsWith(".csv")
       ) {
         setFile(droppedFile);
+      }else{
+        toast.info("")
       }
     }
   };

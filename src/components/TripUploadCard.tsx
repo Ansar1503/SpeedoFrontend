@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UploadTripModal } from "@/components/TripUploadModal";
+import { uploadTripApi } from "@/api/tripApi";
+import { toast } from "sonner";
 
 export function UploadTripCard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,9 +13,18 @@ export function UploadTripCard() {
     setIsModalOpen(true);
   };
 
-  const handleSaveTrip = (tripName: string, file: File | null) => {
-    console.log("Trip saved:", { tripName, file: file?.name });
-    setIsModalOpen(false);
+  const handleSaveTrip = async (tripName: string, file: File | null) => {
+    console.log("Trip saved:", file, "tripname", tripName);
+    if (!file) {
+      toast.error("file not found. please try adding the file again");
+      return;
+    }
+    try {
+      await uploadTripApi(tripName, file);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (
