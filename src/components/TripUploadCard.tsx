@@ -21,13 +21,13 @@ export function UploadTripCard() {
       <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
         <div className="flex flex-col items-center justify-center gap-6 py-8">
           {/* Illustration */}
-          <div className="relative w-full h-64">
-            <img
+          {/* <div className="relative w-full h-64"> */}
+          {/* <img
               src="/trip-illustration.jpg"
               alt="Trip planning illustration"
               className="object-contain"
-            />
-          </div>
+            /> */}
+          {/* </div> */}
 
           {/* Button */}
           <Button
@@ -39,7 +39,7 @@ export function UploadTripCard() {
 
           {/* Description */}
           <p className="text-gray-500 text-sm font-medium">
-            Upload the Excel sheet of your trip
+            Upload the CSV file of your trip
           </p>
         </div>
       </div>

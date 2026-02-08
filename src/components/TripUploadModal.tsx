@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,17 +25,17 @@ export function UploadTripModal({
   const handleDragLeave = () => {
     setIsDragOver(false);
   };
-
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
+
     const droppedFiles = e.dataTransfer.files;
     if (droppedFiles.length > 0) {
       const droppedFile = droppedFiles[0];
+
       if (
-        droppedFile.type ===
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-        droppedFile.type === "application/vnd.ms-excel"
+        droppedFile.type === "text/csv" ||
+        droppedFile.name.toLowerCase().endsWith(".csv")
       ) {
         setFile(droppedFile);
       }
@@ -52,6 +50,9 @@ export function UploadTripModal({
   };
 
   const handleSave = () => {
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith(".csv")) return;
+
     onSave(tripName, file);
     setTripName("");
     setFile(null);
@@ -97,11 +98,11 @@ export function UploadTripModal({
           {/* Trip Name Input */}
           <div>
             <Input
-              type="text"
-              placeholder="Trip Name*"
-              value={tripName}
-              onChange={(e) => setTripName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5bcec4] focus:border-transparent"
+              type="file"
+              onChange={handleFileChange}
+              accept=".csv,text/csv"
+              className="absolute inset-0 opacity-0 cursor-pointer"
+              aria-label="Upload CSV file"
             />
           </div>
 
@@ -119,7 +120,7 @@ export function UploadTripModal({
             <input
               type="file"
               onChange={handleFileChange}
-              accept=".xlsx,.xls"
+              accept=".csv,text/csv"
               className="absolute inset-0 opacity-0 cursor-pointer"
               aria-label="Upload Excel file"
             />
