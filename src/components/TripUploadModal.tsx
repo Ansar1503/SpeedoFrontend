@@ -40,7 +40,7 @@ export function UploadTripModal({
       ) {
         setFile(droppedFile);
       }else{
-        toast.info("")
+        toast.info("please add a csv file")
       }
     }
   };

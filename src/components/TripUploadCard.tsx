@@ -1,10 +1,9 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UploadTripModal } from "@/components/TripUploadModal";
 import { uploadTripApi } from "@/api/tripApi";
 import { toast } from "sonner";
+import uploadAnimation from "@/assets/videos/uploadanimation.mp4";
 
 export function UploadTripCard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,18 +31,21 @@ export function UploadTripCard() {
       <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
         <div className="flex flex-col items-center justify-center gap-6 py-8">
           {/* Illustration */}
-          {/* <div className="relative w-full h-64"> */}
-          {/* <img
-              src="/trip-illustration.jpg"
-              alt="Trip planning illustration"
-              className="object-contain"
-            /> */}
-          {/* </div> */}
+          <video
+            src={uploadAnimation}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="object-contain h-52"
+          >
+            Your browser does not support the video tag.
+          </video>
 
           {/* Button */}
           <Button
             onClick={handleUpload}
-            className="bg-[#1a2a3a] hover:bg-[#0f1a26] text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200"
+            className="bg-[#1a2a3a] hover:bg-[#0f1a26] text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200 cursor-pointer"
           >
             Upload Trip
           </Button>
