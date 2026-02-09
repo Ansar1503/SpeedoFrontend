@@ -23,9 +23,8 @@ export const getTripsApi = async (page = 1, limit = 10) => {
   const response = await api.get(`${tripRoutes.trips}`, {
     params: { page, limit },
   });
-  return response.data; 
+  return response.data;
 };
-
 
 export const deleteTripsApi = async (tripIds: string[]) => {
   const response = await api.delete(`${tripRoutes.trips}`, {
@@ -33,3 +32,12 @@ export const deleteTripsApi = async (tripIds: string[]) => {
   });
   return response.data;
 };
+
+export async function getTripById(tripId: string) {
+  if (!tripId) {
+    throw new Error("Trip ID is required");
+  }
+  const response = await api.get(`${tripRoutes.trips}/${tripId}`);
+
+  return response.data;
+}

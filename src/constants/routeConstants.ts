@@ -4,11 +4,11 @@ export const tripRoutes = {
 };
 
 export const authRoutes = {
-  auth:"/auth",
+  auth: "/auth",
   signup: "/signup",
   signin: "/signin",
-  refresh:"/refresh",
-  logout:"/logout",
+  refresh: "/refresh",
+  logout: "/logout",
 };
 
 export const api = "/api";

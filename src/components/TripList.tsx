@@ -17,6 +17,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import { useNavigate } from "react-router-dom";
 
 export function TripsList({
   refreshKey,
@@ -30,6 +31,7 @@ export function TripsList({
     5,
     refreshKey,
   );
+  const navigate = useNavigate();
 
   const [selectedTrips, setSelectedTrips] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
@@ -111,7 +113,7 @@ export function TripsList({
           {/* OPEN */}
           <Button
             onClick={() =>
-              console.log("Open trip:", Array.from(selectedTrips)[0])
+              navigate(`/dashboard/trip/${Array.from(selectedTrips)[0]}`)
             }
             disabled={selectedTrips.size !== 1}
             className="cursor-pointer"
