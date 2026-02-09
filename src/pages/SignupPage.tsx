@@ -1,7 +1,7 @@
-import LoginForm from "@/components/LoginForm";
+import SignupForm from "@/components/SignupForm";
 import { useNavigate } from "react-router-dom";
 
-export default function LoginPage() {
+export function SignupPage() {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#a8e6d4] via-[#7fd9c7] to-[#5bcec4] p-4">
@@ -30,17 +30,18 @@ export default function LoginPage() {
             <span className="text-xl font-bold text-gray-900">Speedo</span>
           </div>
         </div>
-        <LoginForm />
+        <SignupForm />
+        {/* Toggle Link */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <button
               onClick={() => {
-                navigate("/signup");
+                navigate("/");
               }}
               className="text-[#5bcec4] font-semibold hover:underline cursor-pointer"
             >
-              Sign up
+              Sign in
             </button>
           </p>
         </div>

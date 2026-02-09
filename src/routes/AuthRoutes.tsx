@@ -1,13 +1,12 @@
 import LoginPage from "@/pages/LoginPage";
+import { SignupPage } from "@/pages/SignupPage";
 import { Route, Routes } from "react-router-dom";
-// import Login from "../pages/auth/Login";
-// import Signup from "../pages/auth/Signup";
 
 const AuthRoutes = () => {
   return (
     <Routes>
       <Route index element={<LoginPage />} />
-      {/* <Route path="/signup" element={<Signup />} /> */}
+      <Route path="signup" element={<SignupPage />} />
     </Routes>
   );
 };
