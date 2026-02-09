@@ -20,3 +20,9 @@ export const signupApi = async (payload: {
     throw error;
   }
 };
+
+export const refreshTokenApi = async () => {
+  const response = await api.post(`${authRoutes.auth}${authRoutes.refresh}`);
+  return response.data;
+};
+
