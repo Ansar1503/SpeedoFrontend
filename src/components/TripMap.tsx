@@ -135,7 +135,7 @@ export function TripMap({ gpsPoints }: { gpsPoints: GPSPoint[] }) {
 
         <FitBounds points={gpsPoints} />
       </MapContainer>{" "}
-      <div className="flex gap-2 mt-4 justify-center overflow-x-auto">
+      {/* <div className="flex gap-2 mt-4 justify-center overflow-x-auto">
         {[
           "<",
           "Colaba",
@@ -151,7 +151,7 @@ export function TripMap({ gpsPoints }: { gpsPoints: GPSPoint[] }) {
             {label}
           </button>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
