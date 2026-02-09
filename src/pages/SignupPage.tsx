@@ -33,7 +33,7 @@ export function SignupPage() {
         <SignupForm />
         {/* Toggle Link */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+           <p className="text-sm text-gray-600">
             Already have an account?{" "}
             <button
               onClick={() => {
