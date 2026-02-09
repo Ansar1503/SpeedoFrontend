@@ -21,7 +21,7 @@ export function TripsList({ refreshKey }: { refreshKey: number }) {
   };
 
   const handleDelete = () => {
-    console.log("Deleting trips:", Array.from(selectedTrips));
+    const tripIds = Array.from(selectedTrips);
     setSelectedTrips(new Set());
   };
 

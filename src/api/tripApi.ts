@@ -27,7 +27,9 @@ export const getTripsApi = async (page = 1, limit = 10) => {
 };
 
 
-// export const getTripByIdApi = async (tripId: string) => {
-//   const response = await api.get(`/trips/${tripId}`);
-//   return response.data;
-// };
+export const deleteTripsApi = async (tripIds: string[]) => {
+  const response = await api.delete(`${tripRoutes.trips}`, {
+    data: { tripIds },
+  });
+  return response.data;
+};
