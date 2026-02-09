@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import uploadingAnimation from "@/assets/videos/uploadinganimation.mp4";
 
 interface UploadTripModalProps {
+  isUploading: boolean;
   isOpen: boolean;
   onClose: () => void;
   onSave: (tripName: string, file: File | null) => void;
 }
 
 export function UploadTripModal({
+  isUploading,
   isOpen,
   onClose,
   onSave,
@@ -39,8 +42,8 @@ export function UploadTripModal({
         droppedFile.name.toLowerCase().endsWith(".csv")
       ) {
         setFile(droppedFile);
-      }else{
-        toast.info("please add a csv file")
+      } else {
+        toast.info("please add a csv file");
       }
     }
   };
@@ -98,79 +101,99 @@ export function UploadTripModal({
 
         {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Trip Name Input */}
-          <div>
-            <Input
-              type="file"
-              onChange={handleFileChange}
-              accept=".csv,text/csv"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              aria-label="Upload CSV file"
-            />
-          </div>
-
-          {/* File Upload Area */}
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            className={`relative border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center gap-3 transition-colors cursor-pointer ${
-              isDragOver
-                ? "border-[#5bcec4] bg-blue-50"
-                : "border-[#5bcec4] hover:bg-blue-50"
-            }`}
-          >
-            <input
-              type="file"
-              onChange={handleFileChange}
-              accept=".csv,text/csv"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              aria-label="Upload Excel file"
-            />
-
-            {/* Icon */}
-            <svg
-              className="w-8 h-8 text-[#5bcec4]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+          {isUploading ? (
+            // 🔴 UPLOADING STATE UI
+            <div className="flex flex-col items-center justify-center gap-4 py-10">
+              <video
+                src={uploadingAnimation}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="h-32 object-contain"
               />
-            </svg>
-
-            {/* Text */}
-            <div className="text-center">
-              {file ? (
-                <p className="text-[#5bcec4] font-medium">{file.name}</p>
-              ) : (
-                <p className="text-[#5bcec4] font-medium">
-                  Click here to upload the CSV File of your trip
-                </p>
-              )}
+              <p className="text-sm text-gray-600 font-medium">
+                Uploading your trip…
+              </p>
             </div>
-          </div>
+          ) : (
+            <>
+              <div>
+                <Input
+                  type="file"
+                  onChange={handleFileChange}
+                  accept=".csv,text/csv"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  aria-label="Upload CSV file"
+                />
+              </div>
 
-          {/* Buttons */}
-          <div className="flex gap-4 pt-4">
-            <Button
-              onClick={handleClose}
-              variant="outline"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors bg-transparent"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSave}
-              className="flex-1 bg-[#1a2a3a] hover:bg-[#0f1a26] text-white font-medium rounded-lg transition-colors"
-            >
-              Save
-            </Button>
-          </div>
+              {/* File Upload Area */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`relative border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center gap-3 transition-colors cursor-pointer ${
+                  isDragOver
+                    ? "border-[#5bcec4] bg-blue-50"
+                    : "border-[#5bcec4] hover:bg-blue-50"
+                }`}
+              >
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                  accept=".csv,text/csv"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  aria-label="Upload Excel file"
+                />
+
+                {/* Icon */}
+                <svg
+                  className="w-8 h-8 text-[#5bcec4]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+
+                {/* Text */}
+                <div className="text-center">
+                  {file ? (
+                    <p className="text-[#5bcec4] font-medium">{file.name}</p>
+                  ) : (
+                    <p className="text-[#5bcec4] font-medium">
+                      Click here to upload the CSV File of your trip
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-4 pt-4">
+                <Button
+                  onClick={handleClose}
+                  disabled={isUploading}
+                  variant="outline"
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  onClick={handleSave}
+                  disabled={isUploading}
+                  className="flex-1 bg-[#1a2a3a] text-white rounded-lg disabled:opacity-50 cursor-pointer"
+                >
+                  {isUploading ? "Uploading…" : "Save"}
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

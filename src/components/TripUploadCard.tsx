@@ -7,22 +7,30 @@ import uploadAnimation from "@/assets/videos/uploadanimation.mp4";
 
 export function UploadTripCard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleUpload = () => {
     setIsModalOpen(true);
   };
 
   const handleSaveTrip = async (tripName: string, file: File | null) => {
-    console.log("Trip saved:", file, "tripname", tripName);
     if (!file) {
-      toast.error("file not found. please try adding the file again");
+      toast.error("File not found. Please upload a CSV file.");
       return;
     }
+
     try {
+      setIsUploading(true);
+
       await uploadTripApi(tripName, file);
+
+      toast.success("Trip uploaded successfully");
       setIsModalOpen(false);
     } catch (error) {
-      console.log("error", error);
+      console.log("errors", error);
+      toast.error("Upload failed");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -59,6 +67,7 @@ export function UploadTripCard() {
 
       <UploadTripModal
         isOpen={isModalOpen}
+        isUploading={isUploading}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveTrip}
       />
