@@ -5,6 +5,7 @@ import { TripMap } from "../components/TripMap";
 import { TripSegmentsTable } from "../components/TripSegmentTable";
 import { type GPSPointRaw } from "../lib/gpsUtils";
 import { getTripById } from "@/api/tripApi";
+import { DashboardHeader } from "@/components/layouts/Header";
 
 interface FetchTripResponse {
   trip: {
@@ -152,35 +153,39 @@ export default function TripPage() {
   }));
 
   return (
-    <div className="max-w-[1400px] mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate("/dashboard/")}
-          className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 transition cursor-pointer"
-        >
-          ← Back
-        </button>
-        <h2 className="text-2xl font-semibold">
-          {tripApi.trip.name || "Trip"}
-        </h2>
-        <div className="text-sm text-gray-500">
-          {tripApi.trip.startTime
-            ? new Date(tripApi.trip.startTime).toLocaleString()
-            : ""}
-          {tripApi.trip.endTime
-            ? ` — ${new Date(tripApi.trip.endTime).toLocaleString()}`
-            : ""}
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <DashboardHeader />
 
-      <div className="space-y-8">
-        {/* Map */}
-        <div className="w-full">
+      {/* Page content */}
+      <main className="max-w-[1400px] mx-auto p-6 space-y-6">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => navigate("/dashboard/")}
+            className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 transition cursor-pointer"
+          >
+            ← Back
+          </button>
+
+          <h2 className="text-2xl font-semibold">
+            {tripApi.trip.name || "Trip"}
+          </h2>
+
+          <div className="text-sm text-gray-500">
+            {tripApi.trip.startTime
+              ? new Date(tripApi.trip.startTime).toLocaleString()
+              : ""}
+            {tripApi.trip.endTime
+              ? ` — ${new Date(tripApi.trip.endTime).toLocaleString()}`
+              : ""}
+          </div>
+        </div>
+
+        <div className="space-y-8">
+          {/* Map */}
           <TripMap gpsPoints={mapPoints} />
-        </div>
 
-        {/* Stats */}
-        <div className="w-full">
+          {/* Stats */}
           <TripStats
             trip={{
               totalDistance: Math.round(tripTotals.totalDistance),
@@ -194,11 +199,9 @@ export default function TripPage() {
             }}
           />
         </div>
-      </div>
 
-      <div>
         <TripSegmentsTable data={segments} />
-      </div>
+      </main>
     </div>
   );
 }
