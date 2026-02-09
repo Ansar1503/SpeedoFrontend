@@ -1,24 +1,38 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import PaginationComponent from "./PaginationComponent";
+import { useGetTrips } from "@/hooks/useGetTrips";
 
-export function TripsList() {
+export function TripsList({ refreshKey }: { refreshKey: number }) {
+  const { trips, loading, page, setPage, pagination } = useGetTrips(
+    1,
+    5,
+    refreshKey,
+  );
+  console.log("pagination", pagination);
   const [selectedTrips, setSelectedTrips] = useState<Set<string>>(new Set());
+
+  const toggleTrip = (tripId: string) => {
+    setSelectedTrips((prev) => {
+      const next = new Set(prev);
+      next.has(tripId) ? next.delete(tripId) : next.add(tripId);
+      return next;
+    });
+  };
+
   const handleDelete = () => {
-    if (selectedTrips.size > 0) {
-      console.log("Deleting trips:", Array.from(selectedTrips));
-      setSelectedTrips(new Set());
-    }
+    console.log("Deleting trips:", Array.from(selectedTrips));
+    setSelectedTrips(new Set());
   };
 
   const handleOpen = () => {
-    if (selectedTrips.size > 0) {
-      console.log("Opening trip:", Array.from(selectedTrips)[0]);
-    }
+    console.log("Opening trip:", Array.from(selectedTrips)[0]);
   };
+
+  if (loading) {
+    return <p className="p-6">Loading trips...</p>;
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
@@ -30,15 +44,10 @@ export function TripsList() {
             onClick={handleDelete}
             disabled={selectedTrips.size === 0}
             variant="outline"
-            className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent"
           >
             Delete
           </Button>
-          <Button
-            onClick={handleOpen}
-            disabled={selectedTrips.size !== 1}
-            className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          <Button onClick={handleOpen} disabled={selectedTrips.size !== 1}>
             Open
           </Button>
         </div>
@@ -46,23 +55,42 @@ export function TripsList() {
 
       {/* Table */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        {/* Table Header */}
-        <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 flex items-center gap-4">
-          <Checkbox />
+        {/* Header */}
+        <div className="bg-gray-50 border-b px-6 py-4 flex gap-4">
           <span className="text-sm font-medium text-gray-700">Trips</span>
         </div>
 
-        {/* Table Body */}
-        <div className="divide-y divide-gray-200"></div>
+        {/* Body */}
+        <div className="divide-y">
+          {trips.length === 0 && (
+            <p className="p-6 text-gray-500">No trips found</p>
+          )}
+
+          {trips.map((trip: any) => (
+            <div key={trip._id} className="px-6 py-4 flex items-center gap-4">
+              <Checkbox
+                checked={selectedTrips.has(trip._id)}
+                onCheckedChange={() => toggleTrip(trip._id)}
+              />
+              <div>
+                <p className="font-medium">{trip.name}</p>
+                <p className="text-sm text-gray-500">
+                  {new Date(trip.startTime).toLocaleString()} →{" "}
+                  {new Date(trip.endTime).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Pagination */}
       <PaginationComponent
-        currentPage={1}
-        handlePageChange={() => {}}
-        itemsPerPage={10}
-        totalItems={19}
-        totalPages={19}
+        currentPage={page}
+        handlePageChange={setPage}
+        itemsPerPage={pagination.limit}
+        totalItems={pagination.total}
+        totalPages={pagination.totalPages}
       />
     </div>
   );

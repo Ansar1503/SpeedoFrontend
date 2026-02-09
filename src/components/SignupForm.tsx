@@ -67,8 +67,8 @@ export default function SignupForm() {
         password,
       });
 
-      const { accessToken } = response;
-      login(accessToken);
+      const { accessToken, data } = response;
+      login(accessToken, data?.name as string);
       setSuccess("Signup successful! Redirecting to dashboard...");
 
       setTimeout(() => {

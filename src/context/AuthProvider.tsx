@@ -6,13 +6,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return Boolean(localStorage.getItem("accessToken"));
   });
 
-  const login = (accessToken: string) => {
+  const login = (accessToken: string, username: string) => {
     localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("username", username);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("username");
     setIsAuthenticated(false);
   };
 
@@ -22,4 +24,3 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
-

@@ -44,3 +44,7 @@ export const refreshTokenApi = async () => {
   return response.data;
 };
 
+export const logoutApi = async () => {
+  const response = await api.post(`${authRoutes.auth}${authRoutes.logout}`);
+  return response.data;
+};

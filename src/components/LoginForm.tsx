@@ -47,7 +47,7 @@ export default function LoginForm() {
       setLoading(true);
 
       const response = await signinApi({ email, password });
-      login(response.accessToken);
+      login(response.accessToken, response?.data?.name as string);
 
       toast.success("Signed in successfully");
 

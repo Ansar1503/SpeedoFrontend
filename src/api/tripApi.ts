@@ -19,12 +19,13 @@ export const uploadTripApi = async (tripName: string, file: File) => {
   return response.data;
 };
 
-// export const getTripsApi = async (page = 1, limit = 10) => {
-//   const response = await api.get("/trips", {
-//     params: { page, limit },
-//   });
-//   return response.data;
-// };
+export const getTripsApi = async (page = 1, limit = 10) => {
+  const response = await api.get(`${tripRoutes.trips}`, {
+    params: { page, limit },
+  });
+  return response.data; 
+};
+
 
 // export const getTripByIdApi = async (tripId: string) => {
 //   const response = await api.get(`/trips/${tripId}`);

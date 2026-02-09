@@ -1,7 +1,26 @@
+import { logoutApi } from "@/api/authApi";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+
 export function DashboardHeader() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      await logoutApi();
+    } catch (error) {
+      console.warn("Logout API failed, clearing session locally");
+    } finally {
+      logout();
+      navigate("/", { replace: true });
+    }
+  };
+
   return (
     <header className="bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* Logo */}
         <div className="flex items-center gap-2">
           <svg
             className="w-8 h-8"
@@ -23,6 +42,15 @@ export function DashboardHeader() {
           </svg>
           <span className="text-xl font-bold text-gray-900">Speedo</span>
         </div>
+
+        {/* Logout */}
+        <Button
+          onClick={handleLogout}
+          variant="outline"
+          className="text-red-600 border-red-200 hover:bg-red-50 cursor-pointer"
+        >
+          Logout
+        </Button>
       </div>
     </header>
   );
