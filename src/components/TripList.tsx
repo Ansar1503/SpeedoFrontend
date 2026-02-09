@@ -3,14 +3,36 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import PaginationComponent from "./PaginationComponent";
 import { useGetTrips } from "@/hooks/useGetTrips";
+import { deleteTripsApi } from "@/api/tripApi";
+import { toast } from "sonner";
 
-export function TripsList({ refreshKey }: { refreshKey: number }) {
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+
+export function TripsList({
+  refreshKey,
+  onRefresh,
+}: {
+  refreshKey: number;
+  onRefresh: () => void;
+}) {
   const { trips, loading, page, setPage, pagination } = useGetTrips(
     1,
     5,
     refreshKey,
   );
+
   const [selectedTrips, setSelectedTrips] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
 
   const toggleTrip = (tripId: string) => {
     setSelectedTrips((prev) => {
@@ -20,33 +42,79 @@ export function TripsList({ refreshKey }: { refreshKey: number }) {
     });
   };
 
-  const handleDelete = () => {
+  const handleDeleteConfirmed = async () => {
     const tripIds = Array.from(selectedTrips);
-    setSelectedTrips(new Set());
-  };
+    if (tripIds.length === 0) return;
 
-  const handleOpen = () => {
-    console.log("Opening trip:", Array.from(selectedTrips)[0]);
+    try {
+      setDeleting(true);
+      await deleteTripsApi(tripIds);
+      toast.success("Trips deleted successfully");
+      setSelectedTrips(new Set());
+      onRefresh();
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to delete trips");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   if (loading) {
     return <p className="p-6">Loading trips...</p>;
   }
-  console.log("trips", trips);
+
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Your Trips</h2>
+
         <div className="flex gap-3">
+          {/* DELETE WITH ALERT */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                disabled={selectedTrips.size === 0 || deleting}
+              >
+                Delete
+              </Button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete selected trips?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  You are about to delete <strong>{selectedTrips.size}</strong>{" "}
+                  trip(s).
+                  <br />
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={deleting}>
+                  Cancel
+                </AlertDialogCancel>
+
+                <AlertDialogAction
+                  onClick={handleDeleteConfirmed}
+                  disabled={deleting}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  {deleting ? "Deleting…" : "Delete"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* OPEN */}
           <Button
-            onClick={handleDelete}
-            disabled={selectedTrips.size === 0}
-            variant="outline"
+            onClick={() =>
+              console.log("Open trip:", Array.from(selectedTrips)[0])
+            }
+            disabled={selectedTrips.size !== 1}
           >
-            Delete
-          </Button>
-          <Button onClick={handleOpen} disabled={selectedTrips.size !== 1}>
             Open
           </Button>
         </div>
@@ -54,17 +122,11 @@ export function TripsList({ refreshKey }: { refreshKey: number }) {
 
       {/* Table */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
-        {/* Header */}
-        <div className="bg-gray-50 border-b px-6 py-4 flex gap-4">
+        <div className="bg-gray-50 border-b px-6 py-4">
           <span className="text-sm font-medium text-gray-700">Trips</span>
         </div>
 
-        {/* Body */}
         <div className="divide-y">
-          {trips.length === 0 && (
-            <p className="p-6 text-gray-500">No trips found</p>
-          )}
-
           {trips.map((trip) => (
             <div key={trip.id} className="px-6 py-4 flex items-center gap-4">
               <Checkbox
