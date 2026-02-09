@@ -10,7 +10,6 @@ export function TripsList({ refreshKey }: { refreshKey: number }) {
     5,
     refreshKey,
   );
-  console.log("pagination", pagination);
   const [selectedTrips, setSelectedTrips] = useState<Set<string>>(new Set());
 
   const toggleTrip = (tripId: string) => {
@@ -33,7 +32,7 @@ export function TripsList({ refreshKey }: { refreshKey: number }) {
   if (loading) {
     return <p className="p-6">Loading trips...</p>;
   }
-
+  console.log("trips", trips);
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
       {/* Header */}
@@ -66,11 +65,11 @@ export function TripsList({ refreshKey }: { refreshKey: number }) {
             <p className="p-6 text-gray-500">No trips found</p>
           )}
 
-          {trips.map((trip: any) => (
-            <div key={trip._id} className="px-6 py-4 flex items-center gap-4">
+          {trips.map((trip) => (
+            <div key={trip.id} className="px-6 py-4 flex items-center gap-4">
               <Checkbox
-                checked={selectedTrips.has(trip._id)}
-                onCheckedChange={() => toggleTrip(trip._id)}
+                checked={selectedTrips.has(trip.id)}
+                onCheckedChange={() => toggleTrip(trip.id)}
               />
               <div>
                 <p className="font-medium">{trip.name}</p>
