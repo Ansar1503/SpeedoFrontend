@@ -3,17 +3,17 @@ import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return Boolean(localStorage.getItem("token"));
+    return Boolean(localStorage.getItem("accessToken"));
   });
 
-  const login = () => {
+  const login = (accessToken: string) => {
+    localStorage.setItem("accessToken", accessToken);
     setIsAuthenticated(true);
-    localStorage.setItem("token", "dummy-token");
   };
 
   const logout = () => {
+    localStorage.removeItem("accessToken");
     setIsAuthenticated(false);
-    localStorage.removeItem("token");
   };
 
   return (
@@ -22,3 +22,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+

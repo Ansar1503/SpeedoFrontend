@@ -1,8 +1,15 @@
+import { Route, Routes, Navigate } from "react-router-dom";
 import LoginPage from "@/pages/LoginPage";
 import { SignupPage } from "@/pages/SignupPage";
-import { Route, Routes } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const AuthRoutes = () => {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <Routes>
       <Route index element={<LoginPage />} />
