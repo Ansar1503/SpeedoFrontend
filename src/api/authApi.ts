@@ -21,6 +21,24 @@ export const signupApi = async (payload: {
   }
 };
 
+export const signinApi = async (payload: {
+  email: string;
+  password: string;
+}) => {
+  try {
+    const response = await api.post(
+      `${authRoutes.auth}${authRoutes.signin}`,
+      payload,
+    );
+    return response.data;
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data;
+    }
+    throw error;
+  }
+};
+
 export const refreshTokenApi = async () => {
   const response = await api.post(`${authRoutes.auth}${authRoutes.refresh}`);
   return response.data;

@@ -2,49 +2,102 @@ import { useState } from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { signinApi } from "@/api/authApi";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+  }>({});
+
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const validate = () => {
+    const newErrors: typeof errors = {};
+
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    try {
+      setLoading(true);
+
+      const response = await signinApi({ email, password });
+      login(response.accessToken);
+
+      toast.success("Signed in successfully");
+
+      navigate("/dashboard", { replace: true });
+    } catch (error: any) {
+      toast.error(error?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <form className="space-y-6">
-      {/* Email Field */}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Email */}
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-          Email
-        </Label>
+        <Label htmlFor="email">Email</Label>
         <Input
           id="email"
           type="email"
-          placeholder="Example@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5bcec4] focus:border-transparent bg-gray-50"
+          placeholder="example@email.com"
+          disabled={loading}
         />
+        {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
       </div>
 
-      {/* Password Field */}
+      {/* Password */}
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-          Password
-        </Label>
+        <Label htmlFor="password">Password</Label>
         <Input
           id="password"
           type="password"
-          placeholder="At least 8 characters"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5bcec4] focus:border-transparent bg-gray-50"
+          placeholder="Enter password"
+          disabled={loading}
         />
+        {errors.password && (
+          <p className="text-sm text-red-500">{errors.password}</p>
+        )}
       </div>
 
-      {/* Sign In Button */}
+      {/* Button */}
       <Button
         type="submit"
-        className="w-full bg-[#1a2a3a] hover:bg-[#0f1a26] text-white font-semibold py-2 rounded-lg transition-colors duration-200"
+        disabled={loading}
+        className="w-full bg-[#1a2a3a] hover:bg-[#0f1a26]"
       >
-        Sign in
+        {loading ? "Signing in..." : "Sign in"}
       </Button>
     </form>
   );
