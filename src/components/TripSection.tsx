@@ -42,7 +42,7 @@ export function TripsSection() {
         </Button>
       </div>
 
-      <TripsList refreshKey={refreshKey} />
+      <TripsList refreshKey={refreshKey} onRefresh={() => setRefreshKey((k) => k + 1)} />
 
       <UploadTripModal
         isOpen={isModalOpen}

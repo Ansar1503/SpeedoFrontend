@@ -70,12 +70,12 @@ export function TripsList({
         <h2 className="text-xl font-semibold text-gray-900">Your Trips</h2>
 
         <div className="flex gap-3">
-          {/* DELETE WITH ALERT */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
                 variant="outline"
                 disabled={selectedTrips.size === 0 || deleting}
+                className="cursor-pointer"
               >
                 Delete
               </Button>
@@ -100,7 +100,7 @@ export function TripsList({
                 <AlertDialogAction
                   onClick={handleDeleteConfirmed}
                   disabled={deleting}
-                  className="bg-red-600 hover:bg-red-700"
+                  className="bg-red-600 hover:bg-red-700 cursor-pointer"
                 >
                   {deleting ? "Deleting…" : "Delete"}
                 </AlertDialogAction>
@@ -114,6 +114,7 @@ export function TripsList({
               console.log("Open trip:", Array.from(selectedTrips)[0])
             }
             disabled={selectedTrips.size !== 1}
+            className="cursor-pointer"
           >
             Open
           </Button>
